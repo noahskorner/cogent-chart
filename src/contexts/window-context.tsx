@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 
-interface WindowContextInterface {
+interface IWindowContext {
   height?: number;
   width?: number;
   heightStyle: string;
@@ -16,14 +16,13 @@ const defaultValues = {
   isMobileWidth: false,
 };
 
-export const WindowContext =
-  createContext<WindowContextInterface>(defaultValues);
+export const WindowContext = createContext<IWindowContext>(defaultValues);
 
-interface WindowProviderInterface {
+interface IWindowProvider {
   children: JSX.Element;
 }
 
-export const WindowProvider = ({ children }: WindowProviderInterface) => {
+export const WindowProvider = ({ children }: IWindowProvider) => {
   const [windowSize, setWindowSize] = useState<{
     width: number | undefined;
     height: number | undefined;
