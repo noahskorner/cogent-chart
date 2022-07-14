@@ -1,18 +1,20 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import useGraph from "../hooks/use-graph";
+import useLines from "../hooks/use-lines";
 import useWindow from "../hooks/use-window";
+import Line from "./line";
+import Node from "./node";
 
-interface IGraph {
-  width: number;
-  height: number;
-  zoom: number;
-}
-
-interface GraphProps {
+const defaultNodes = [
+  { id: 1, x: 679, y: 453 },
+  { id: 2, x: 679, y: 600 },
+  { id: 3, x: 20, y: 20 },
+];
+interface GraphContainerProps {
   children: ReactNode;
 }
 
-const Graph = ({ children }: GraphProps) => {
+const GraphContainer = ({ children }: GraphContainerProps) => {
   const { widthStyle: windowWidthStyle, heightStyle: windowHeightStyle } =
     useWindow();
   const { height, width, zoom } = useGraph();
@@ -57,6 +59,36 @@ const Graph = ({ children }: GraphProps) => {
         {children}
       </div>
     </div>
+  );
+};
+
+const Graph = () => {
+  const { lines } = useLines();
+  const { width: graphWidth, height: graphHeight } = useGraph();
+
+  return (
+    <GraphContainer>
+      {defaultNodes.map((e) => (
+        <Node key={e.id} id={e.id} initialX={e.x} initialY={e.y} />
+      ))}
+      <svg
+        width={graphWidth}
+        height={graphHeight}
+        className="absolute top-0 left-0 pointer-events-none"
+      >
+        {lines.map((line, index) => {
+          return (
+            <Line
+              key={index}
+              sourceNodeId={line.sourceNodeId}
+              sourceEdge={line.sourceEdge}
+              targetNodeId={line.targetNodeId}
+              targetEdge={line.targetEdge}
+            />
+          );
+        })}
+      </svg>
+    </GraphContainer>
   );
 };
 

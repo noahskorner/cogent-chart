@@ -1,17 +1,23 @@
-import { useRef, useState, DragEvent, RefObject } from "react";
+import { DragEvent, useCallback, useEffect, useRef } from "react";
 import useNode from "../hooks/use-node";
+import useNodes from "../hooks/use-nodes";
+import Edge from "./edge";
 
 interface NodeProps {
+  id: number;
   initialX: number;
   initialY: number;
 }
 
-const Node = ({ initialX, initialY }: NodeProps) => {
+const Node = ({ id, initialX, initialY }: NodeProps) => {
+  const { updateNode } = useNodes();
   const {
     x,
     y,
-    prevX,
-    prevY,
+    nodeRef,
+    height,
+    width,
+    edges,
     draggable,
     isDragging,
     setIsDragging,
@@ -30,46 +36,36 @@ const Node = ({ initialX, initialY }: NodeProps) => {
     setIsDragging(false);
   };
 
+  useEffect(() => {
+    updateNode({
+      id,
+      x,
+      y,
+      height,
+      width,
+      nodeRef,
+      edges,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [x, y, height, width, nodeRef]);
+
   return (
     <>
       <div
         className={`${
           isDragging ? "opacity-0" : ""
-        } w-64 border rounded-md bg-white absolute border-slate-300 shadow cursor-move z-1`}
+        } w-32 h-32 border rounded-md bg-white absolute border-slate-300 shadow cursor-move z-1 focus:ring-1 focus:ring-blue-300`}
         onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
         style={{ top: `${y}px`, left: `${x}px` }}
         draggable={draggable}
+        tabIndex={0}
+        ref={nodeRef}
       >
-        <div className="border-b border-slate-300">
-          <input
-            type="text"
-            name=""
-            id=""
-            className="w-full h-full p-2 rounded-t-md text-sm font-semibold"
-          />
-        </div>
-        <div>
-          <input
-            type="text"
-            name=""
-            id=""
-            className="w-full h-full p-2 text-sm"
-          />
-          <input
-            type="text"
-            name=""
-            id=""
-            className="w-full h-full p-2 text-sm"
-          />
-          <input
-            type="text"
-            name=""
-            id=""
-            className="w-full h-full p-2 rounded-b-md text-sm"
-          />
-        </div>
+        {edges.map((edge, index) => {
+          return <Edge key={index} nodeId={id} edge={edge} index={index} />;
+        })}
       </div>
       {isDragging && (
         <div style={{ top: `${y}px`, left: `${x}px` }} className="absolute">
