@@ -25,30 +25,29 @@ interface ILinesProvider {
 
 export const LinesProvider = ({ children }: ILinesProvider) => {
   const [lines, setLines] = useState<ILine[]>(defaultValues.lines);
+  const [queue, setQueue] = useState<{ nodeId: number; edge: number }[]>([]);
   const waitingNode = useRef<number | null>(null);
   const waitingEdge = useRef<number | null>(null);
 
   const addLine = (nodeId: number, index: number) => {
-    setLines((prev) => {
-      if (waitingNode.current == null) {
-        waitingNode.current = nodeId;
-        waitingEdge.current = index;
-        return prev;
-      }
-
-      const lines = [
-        ...prev,
-        {
-          sourceNodeId: waitingNode.current!,
-          sourceEdge: waitingEdge.current!,
-          targetNodeId: nodeId,
-          targetEdge: index,
-        },
-      ];
-
-      return lines;
-    });
+    setQueue((prev) => [...prev, { nodeId, edge: index }]);
   };
+
+  useEffect(() => {
+    if (queue.length > 0 && queue.length % 2 === 0) {
+      setLines((prev) => {
+        return [
+          ...prev,
+          {
+            sourceNodeId: queue[queue.length - 2].nodeId,
+            sourceEdge: queue[queue.length - 2].edge,
+            targetNodeId: queue[queue.length - 1].nodeId,
+            targetEdge: queue[queue.length - 1].edge,
+          },
+        ];
+      });
+    }
+  }, [queue]);
 
   return (
     <LinesContext.Provider value={{ lines, addLine }}>
