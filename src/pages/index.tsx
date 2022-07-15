@@ -5,6 +5,7 @@ import { GraphProvider } from "../contexts/graph-context";
 import Sidebar from "../components/sidebar";
 import { NodesProvider } from "../contexts/nodes-context";
 import { LinesProvider } from "../contexts/line-context";
+import useNodes from "../hooks/use-nodes";
 
 const Home: NextPage = () => {
   const { widthStyle, heightStyle } = useWindow();

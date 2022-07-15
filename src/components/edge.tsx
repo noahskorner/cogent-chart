@@ -1,5 +1,5 @@
-import { IPoint } from "../contexts/nodes-context";
 import useLines from "../hooks/use-lines";
+import { IPoint } from "../hooks/use-node";
 
 interface EdgeProps {
   nodeId: number;

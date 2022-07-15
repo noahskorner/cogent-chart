@@ -26,8 +26,6 @@ interface ILinesProvider {
 export const LinesProvider = ({ children }: ILinesProvider) => {
   const [lines, setLines] = useState<ILine[]>(defaultValues.lines);
   const [queue, setQueue] = useState<{ nodeId: number; edge: number }[]>([]);
-  const waitingNode = useRef<number | null>(null);
-  const waitingEdge = useRef<number | null>(null);
 
   const addLine = (nodeId: number, index: number) => {
     setQueue((prev) => [...prev, { nodeId, edge: index }]);

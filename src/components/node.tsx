@@ -1,7 +1,8 @@
-import { DragEvent, useCallback, useEffect, useRef } from "react";
+import { DragEvent, useEffect, useRef } from "react";
 import useNode from "../hooks/use-node";
 import useNodes from "../hooks/use-nodes";
 import Edge from "./edge";
+import Resize from "./resize";
 
 interface NodeProps {
   id: number;
@@ -10,66 +11,131 @@ interface NodeProps {
 }
 
 const Node = ({ id, initialX, initialY }: NodeProps) => {
-  const { updateNode } = useNodes();
+  const executedRef = useRef(false);
+  const { addNode, updateNode } = useNodes();
+  const node = useNode({ id, initialX, initialY });
   const {
     x,
     y,
-    nodeRef,
-    height,
     width,
+    height,
+    nodeRef,
     edges,
     draggable,
     isDragging,
+    isFocused,
+    isHovered,
+    setWidth,
+    setHeight,
+    setIsHovered,
+    setIsFocused,
     setIsDragging,
     setPrevPosition,
-    setPositionInGraph,
-  } = useNode({ initialX, initialY });
+    setPosition,
+  } = node;
 
+  const onFocus = () => {
+    setIsFocused(true);
+  };
+  const onBlur = () => {
+    setIsFocused(false);
+  };
+  const onHover = () => {
+    setIsHovered(true);
+  };
+  const onMouseLeave = () => {
+    setIsHovered(false);
+  };
   const onDragStart = (e: DragEvent<HTMLDivElement>) => {
     setIsDragging(true);
     setPrevPosition(e.clientX, e.clientY);
   };
   const onDragOver = (e: DragEvent<HTMLDivElement>) => {
-    setPositionInGraph(e.clientX, e.clientY);
+    setPosition(e.clientX, e.clientY);
   };
   const onDragEnd = (e: DragEvent<HTMLDivElement>) => {
     setIsDragging(false);
   };
 
   useEffect(() => {
-    updateNode({
-      id,
-      x,
-      y,
-      height,
-      width,
-      nodeRef,
-      edges,
-    });
+    if (executedRef.current) return;
+
+    addNode(node);
+    executedRef.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [x, y, height, width, nodeRef]);
+  }, []);
+
+  useEffect(() => {
+    updateNode(node);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [x, y, width, height]);
 
   return (
     <>
       <div
-        className={`${
-          isDragging ? "opacity-0" : ""
-        } w-32 h-32 border rounded-md bg-white absolute border-slate-300 shadow cursor-move z-1 focus:ring-1 focus:ring-blue-300`}
+        style={{
+          top: `${y}px`,
+          left: `${x}px`,
+          width: `${width}px`,
+          height: `${height}px`,
+        }}
+        className={`${isDragging ? "opacity-0" : ""} rounded-md absolute z-1`}
+        onFocus={onFocus}
+        onMouseOver={onHover}
+        onMouseLeave={onMouseLeave}
+        onBlur={onBlur}
         onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
-        style={{ top: `${y}px`, left: `${x}px` }}
         draggable={draggable}
         tabIndex={0}
         ref={nodeRef}
       >
-        {edges.map((edge, index) => {
-          return <Edge key={index} nodeId={id} edge={edge} index={index} />;
-        })}
+        <Resize
+          draggable={draggable}
+          width={width}
+          height={height}
+          setWidth={setWidth}
+          setHeight={setHeight}
+        />
+        <div
+          className={`${
+            isFocused || isHovered ? "ring-1 ring-blue-300" : ""
+          } w-full h-full border rounded-md bg-white border-slate-300 shadow cursor-move relative z-1`}
+        >
+          {isHovered || isFocused
+            ? edges.map((edge, index) => {
+                return (
+                  <Edge key={index} nodeId={id} edge={edge} index={index} />
+                );
+              })
+            : null}
+        </div>
       </div>
       {isDragging && (
-        <div style={{ top: `${y}px`, left: `${x}px` }} className="absolute">
-          weeeee {x} {y}
+        <div
+          style={{
+            top: `${y}px`,
+            left: `${x}px`,
+            width: `${width}px`,
+            height: `${height}px`,
+          }}
+          className="rounded-md absolute z-1 pointer-events-none"
+          draggable={false}
+        >
+          <div
+            className={`${
+              isFocused || isHovered ? "ring-1 ring-blue-300" : ""
+            } w-full h-full border rounded-md bg-white border-slate-300 shadow cursor-move relative z-1`}
+          >
+            {isHovered || isFocused
+              ? edges.map((edge, index) => {
+                  return (
+                    <Edge key={index} nodeId={id} edge={edge} index={index} />
+                  );
+                })
+              : null}
+          </div>
         </div>
       )}
     </>
