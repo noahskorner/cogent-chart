@@ -47,6 +47,7 @@ const Resize = ({
   const initialWidth = useRef<number>(width);
   const initialHeight = useRef<number>(height);
   const directionRef = useRef<Direction | null>(null);
+  // TODO: Move these to a single state object
   const [startX, setStartX] = useState<number | null>(null);
   const [startY, setStartY] = useState<number | null>(null);
   const [endX, setEndX] = useState<number | null>(null);
@@ -92,6 +93,8 @@ const Resize = ({
         if (newHeight > MIN_SIZE) {
           setY(initialY.current + moveY * (direction / 2));
           setHeight(newHeight);
+
+          console.log(directionRef.current, direction, moveY, newHeight);
         }
       } else if (
         directionRef.current === Direction.EAST ||
@@ -103,10 +106,13 @@ const Resize = ({
         if (newWidth > MIN_SIZE) {
           setX(initialX.current + moveX * (direction / 2));
           setWidth(newWidth);
+
+          console.log(directionRef.current, direction, moveX, newWidth);
         }
       }
     }
-  }, [endX, endY, setHeight, setWidth, setX, setY, startX, startY]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [endX, endY]);
 
   useEffect(() => {
     if (startX == null || startY == null) {
