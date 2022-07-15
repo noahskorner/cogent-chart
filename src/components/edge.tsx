@@ -5,9 +5,11 @@ interface EdgeProps {
   nodeId: number;
   edge: IPoint;
   index: number;
+  height: number;
+  width: number;
 }
 
-const Edge = ({ nodeId, edge, index }: EdgeProps) => {
+const Edge = ({ nodeId, edge, index, height, width }: EdgeProps) => {
   const { addLine } = useLines();
   const onClick = () => {
     addLine(nodeId, index);

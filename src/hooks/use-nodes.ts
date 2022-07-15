@@ -23,11 +23,16 @@ const useNodes = () => {
     return nodes.find((e) => e.id === id) ?? null;
   };
 
+  const removeNode = (id: number) => {
+    setNodes((prev) => prev.filter((e) => e.id !== id));
+  };
+
   return {
     ...nodesContext,
     addNode,
     updateNode,
     findNode,
+    removeNode,
   };
 };
 

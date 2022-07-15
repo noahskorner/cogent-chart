@@ -1,4 +1,5 @@
-import { DragEvent, useEffect, useRef } from "react";
+import { DragEvent, KeyboardEvent, useEffect, useRef } from "react";
+import useGraph from "../hooks/use-graph";
 import useNode from "../hooks/use-node";
 import useNodes from "../hooks/use-nodes";
 import Edge from "./edge";
@@ -12,7 +13,7 @@ interface NodeProps {
 
 const Node = ({ id, initialX, initialY }: NodeProps) => {
   const executedRef = useRef(false);
-  const { addNode, updateNode } = useNodes();
+  const { addNode, updateNode, removeNode } = useNodes();
   const node = useNode({ id, initialX, initialY });
   const {
     x,
@@ -23,10 +24,12 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
     edges,
     draggable,
     isDragging,
+    isResizing,
     isFocused,
     isHovered,
     setWidth,
     setHeight,
+    setIsResizing,
     setIsHovered,
     setIsFocused,
     setIsDragging,
@@ -51,10 +54,17 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
     setPrevPosition(e.clientX, e.clientY);
   };
   const onDragOver = (e: DragEvent<HTMLDivElement>) => {
-    setPosition(e.clientX, e.clientY);
+    if (!isResizing) {
+      setPosition(e.clientX, e.clientY);
+    }
   };
   const onDragEnd = (e: DragEvent<HTMLDivElement>) => {
     setIsDragging(false);
+  };
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Delete") {
+      removeNode(id);
+    }
   };
 
   useEffect(() => {
@@ -74,8 +84,8 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
     <>
       <div
         style={{
-          top: `${y}px`,
-          left: `${x}px`,
+          top: `${y - height / 2}px`,
+          left: `${x - width / 2}px`,
           width: `${width}px`,
           height: `${height}px`,
         }}
@@ -87,6 +97,7 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
         onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
+        onKeyDown={onKeyDown}
         draggable={draggable}
         tabIndex={0}
         ref={nodeRef}
@@ -97,6 +108,7 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
           height={height}
           setWidth={setWidth}
           setHeight={setHeight}
+          setIsResizing={setIsResizing}
         />
         <div
           className={`${
@@ -106,7 +118,14 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
           {isHovered || isFocused
             ? edges.map((edge, index) => {
                 return (
-                  <Edge key={index} nodeId={id} edge={edge} index={index} />
+                  <Edge
+                    key={index}
+                    nodeId={id}
+                    edge={edge}
+                    index={index}
+                    height={height}
+                    width={width}
+                  />
                 );
               })
             : null}
@@ -115,8 +134,8 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
       {isDragging && (
         <div
           style={{
-            top: `${y}px`,
-            left: `${x}px`,
+            top: `${y - height / 2}px`,
+            left: `${x - width / 2}px`,
             width: `${width}px`,
             height: `${height}px`,
           }}
@@ -127,15 +146,7 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
             className={`${
               isFocused || isHovered ? "ring-1 ring-blue-300" : ""
             } w-full h-full border rounded-md bg-white border-slate-300 shadow cursor-move relative z-1`}
-          >
-            {isHovered || isFocused
-              ? edges.map((edge, index) => {
-                  return (
-                    <Edge key={index} nodeId={id} edge={edge} index={index} />
-                  );
-                })
-              : null}
-          </div>
+          ></div>
         </div>
       )}
     </>

@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import useGraph from "./use-graph";
 
 export interface INode {
   id: number;
@@ -17,12 +18,14 @@ export interface INode {
   width: number;
   nodeRef: (node: HTMLDivElement) => void;
   edges: IPoint[];
+  isResizing: boolean;
   isFocused: boolean;
   isHovered: boolean;
   draggable: boolean;
   isDragging: boolean;
   setWidth: Dispatch<SetStateAction<number>>;
   setHeight: Dispatch<SetStateAction<number>>;
+  setIsResizing: Dispatch<SetStateAction<boolean>>;
   setIsFocused: Dispatch<SetStateAction<boolean>>;
   setIsHovered: Dispatch<SetStateAction<boolean>>;
   setIsDragging: Dispatch<SetStateAction<boolean>>;
@@ -41,6 +44,7 @@ const defaultValues = {
   height: 128,
   prevX: 0,
   prevY: 0,
+  isResizing: false,
   isFocused: false,
   isHovered: false,
   draggable: true,
@@ -54,6 +58,7 @@ interface UseNodeOptions {
 }
 
 const useNode = ({ id, initialX, initialY }: UseNodeOptions): INode => {
+  const { zoom } = useGraph();
   const [x, setX] = useState<number>(initialX);
   const [y, setY] = useState<number>(initialY);
   const [z, setZ] = useState<number>(defaultValues.z);
@@ -73,6 +78,9 @@ const useNode = ({ id, initialX, initialY }: UseNodeOptions): INode => {
   ];
   const prevX = useRef<number>(defaultValues.prevX);
   const prevY = useRef<number>(defaultValues.prevY);
+  const [isResizing, setIsResizing] = useState<boolean>(
+    defaultValues.isResizing
+  );
   const [isFocused, setIsFocused] = useState<boolean>(defaultValues.isFocused);
   const [isHovered, setIsHovered] = useState<boolean>(defaultValues.isHovered);
   const [draggable, setDraggable] = useState<boolean>(defaultValues.draggable);
@@ -89,8 +97,8 @@ const useNode = ({ id, initialX, initialY }: UseNodeOptions): INode => {
     prevY.current = clientY;
   };
   const setPosition = (clientX: number, clientY: number) => {
-    const moveX = clientX - prevX.current;
-    const moveY = clientY - prevY.current!;
+    const moveX = (clientX - prevX.current) * (1 / zoom);
+    const moveY = (clientY - prevY.current!) * (1 / zoom);
 
     setPrevPosition(clientX, clientY);
     move(moveX, moveY);
@@ -106,12 +114,14 @@ const useNode = ({ id, initialX, initialY }: UseNodeOptions): INode => {
     edges,
     prevX,
     prevY,
+    isResizing,
     isFocused,
     isHovered,
     draggable,
     isDragging,
     setWidth,
     setHeight,
+    setIsResizing,
     setIsFocused,
     setIsHovered,
     setIsDragging,

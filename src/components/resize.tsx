@@ -13,6 +13,7 @@ interface ResizeProps {
   height: number;
   setWidth: Dispatch<SetStateAction<number>>;
   setHeight: Dispatch<SetStateAction<number>>;
+  setIsResizing: Dispatch<SetStateAction<boolean>>;
 }
 
 const Resize = ({
@@ -21,6 +22,7 @@ const Resize = ({
   height,
   setWidth,
   setHeight,
+  setIsResizing,
 }: ResizeProps) => {
   const initialWidth = useRef<number>(width);
   const initialHeight = useRef<number>(height);
@@ -33,12 +35,15 @@ const Resize = ({
     setStartX(x);
     setStartY(y);
   };
+
   const setEnd = (x: number | null, y: number | null) => {
     setEndX(x);
     setEndY(y);
   };
 
   const onDragStart = (e: DragEvent<HTMLDivElement>) => {
+    setIsResizing(true);
+
     setStart(e.clientX, e.clientY);
   };
   const onDrag = (e: DragEvent<HTMLDivElement>) => {
@@ -47,6 +52,8 @@ const Resize = ({
   const onDragEnd = (e: DragEvent<HTMLDivElement>) => {
     setStart(null, null);
     setEnd(null, null);
+
+    setIsResizing(false);
   };
 
   useEffect(() => {
@@ -55,6 +62,13 @@ const Resize = ({
       setHeight(initialHeight.current + (endY - startY));
     }
   }, [endX, endY, setHeight, setWidth, startX, startY]);
+
+  useEffect(() => {
+    if (startX == null || startY == null) {
+      initialWidth.current = width;
+      initialHeight.current = height;
+    }
+  }, [height, startX, startY, width]);
 
   return (
     <>

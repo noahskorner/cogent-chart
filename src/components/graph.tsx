@@ -23,7 +23,6 @@ const GraphContainer = ({ children }: GraphContainerProps) => {
 
   return (
     <>
-      {JSON.stringify(nodes)}
       <div
         style={{
           maxWidth: windowWidthStyle,
