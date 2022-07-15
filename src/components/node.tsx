@@ -27,6 +27,8 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
     isResizing,
     isFocused,
     isHovered,
+    setX,
+    setY,
     setWidth,
     setHeight,
     setIsResizing,
@@ -104,11 +106,15 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
       >
         <Resize
           draggable={draggable}
+          x={x}
+          y={y}
           width={width}
           height={height}
           setWidth={setWidth}
           setHeight={setHeight}
           setIsResizing={setIsResizing}
+          setX={setX}
+          setY={setY}
         />
         <div
           className={`${
@@ -118,14 +124,7 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
           {isHovered || isFocused
             ? edges.map((edge, index) => {
                 return (
-                  <Edge
-                    key={index}
-                    nodeId={id}
-                    edge={edge}
-                    index={index}
-                    height={height}
-                    width={width}
-                  />
+                  <Edge key={index} nodeId={id} edge={edge} index={index} />
                 );
               })
             : null}

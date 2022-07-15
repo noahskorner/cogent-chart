@@ -23,6 +23,8 @@ export interface INode {
   isHovered: boolean;
   draggable: boolean;
   isDragging: boolean;
+  setX: Dispatch<SetStateAction<number>>;
+  setY: Dispatch<SetStateAction<number>>;
   setWidth: Dispatch<SetStateAction<number>>;
   setHeight: Dispatch<SetStateAction<number>>;
   setIsResizing: Dispatch<SetStateAction<boolean>>;
@@ -119,6 +121,8 @@ const useNode = ({ id, initialX, initialY }: UseNodeOptions): INode => {
     isHovered,
     draggable,
     isDragging,
+    setX,
+    setY,
     setWidth,
     setHeight,
     setIsResizing,
