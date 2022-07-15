@@ -78,7 +78,7 @@ const Graph = () => {
       <svg
         width={graphWidth}
         height={graphHeight}
-        className="absolute top-0 left-0 pointer-events-none"
+        className="absolute top-0 left-0 z-0"
       >
         {lines.map((line, index) => {
           return (

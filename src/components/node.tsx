@@ -91,7 +91,7 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
           width: `${width}px`,
           height: `${height}px`,
         }}
-        className={`${isDragging ? "opacity-0" : ""} rounded-md absolute z-1`}
+        className={`${isDragging ? "opacity-0" : ""} rounded-md absolute z-[1]`}
         onFocus={onFocus}
         onMouseOver={onHover}
         onMouseLeave={onMouseLeave}
@@ -119,7 +119,7 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
         <div
           className={`${
             isFocused || isHovered ? "ring-1 ring-blue-300" : ""
-          } w-full h-full border rounded-md bg-white border-slate-300 shadow cursor-move relative z-1`}
+          } w-full h-full border rounded-md bg-white border-slate-300 shadow cursor-move relative`}
         >
           {isHovered || isFocused
             ? edges.map((edge, index) => {
@@ -138,13 +138,13 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
             width: `${width}px`,
             height: `${height}px`,
           }}
-          className="rounded-md absolute z-1 pointer-events-none"
+          className="rounded-md absolute z-[1] pointer-events-none"
           draggable={false}
         >
           <div
             className={`${
               isFocused || isHovered ? "ring-1 ring-blue-300" : ""
-            } w-full h-full border rounded-md bg-white border-slate-300 shadow cursor-move relative z-1`}
+            } w-full h-full border rounded-md bg-white border-slate-300 shadow cursor-move relative`}
           ></div>
         </div>
       )}

@@ -88,6 +88,7 @@ const Resize = ({
         const direction = directionRef.current === Direction.NORTH ? 1 : -1;
         const moveY = (endY - startY) * direction;
         const newHeight = initialHeight.current - moveY;
+
         if (newHeight > MIN_SIZE) {
           setY(initialY.current + moveY * (direction / 2));
           setHeight(newHeight);
@@ -122,8 +123,8 @@ const Resize = ({
         onDragStart={(e) => onDragStart(e, Direction.WEST)}
         onDrag={onDrag}
         onDragEnd={onDragEnd}
-        style={{ width: `${width + 3}px` }}
-        className={`absolute top-0 -left-[3px] z-0 cursor-ew-resize h-full`}
+        style={{ width: `${width + 6}px` }}
+        className={`absolute top-0 -left-[6px] z-0 cursor-ew-resize h-full`}
         draggable={draggable}
         tabIndex={0}
       ></div>
@@ -131,16 +132,16 @@ const Resize = ({
         onDragStart={(e) => onDragStart(e, Direction.NORTH)}
         onDrag={onDrag}
         onDragEnd={onDragEnd}
-        style={{ height: `${height + 3}px` }}
+        style={{ height: `${height + 6}px` }}
         draggable={draggable}
-        className={`absolute -top-[3px] left-0 z-0 cursor-ns-resize w-full`}
+        className={`absolute -top-[6px] left-0 z-0 cursor-ns-resize w-full`}
       ></div>
       <div
         onDragStart={(e) => onDragStart(e, Direction.EAST)}
         onDrag={onDrag}
         onDragEnd={onDragEnd}
-        style={{ width: `${width + 3}px` }}
-        className={`absolute top-0 -right-[3px] z-0 cursor-ew-resize  h-full `}
+        style={{ width: `${width + 6}px` }}
+        className={`absolute top-0 -right-[6px] z-0 cursor-ew-resize  h-full `}
         draggable={draggable}
         tabIndex={0}
       ></div>
@@ -148,9 +149,9 @@ const Resize = ({
         onDragStart={(e) => onDragStart(e, Direction.SOUTH)}
         onDrag={onDrag}
         onDragEnd={onDragEnd}
-        style={{ height: `${height + 3}px` }}
+        style={{ height: `${height + 6}px` }}
         draggable={draggable}
-        className={`absolute -bottom-[3px] left-0 z-0 cursor-ns-resize w-full `}
+        className={`absolute -bottom-[6px] left-0 z-0 cursor-ns-resize w-full `}
       ></div>
     </>
   );

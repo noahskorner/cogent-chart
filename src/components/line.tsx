@@ -24,7 +24,23 @@ const Line = ({
   const x2 = target.x + target.edges[targetEdge].x - target.width / 2;
   const y2 = target.y + target.edges[targetEdge].y - target.height / 2;
 
-  return <path d={`M${x1} ${y1} ${x2} ${y2}`} strokeWidth="1" stroke="black" />;
+  return (
+    <>
+      <path
+        d={`M${x1} ${y1} ${x2} ${y2}`}
+        strokeWidth="1"
+        stroke="black"
+        className="cursor-pointer"
+      />
+      <path
+        d={`M${x1} ${y1} ${x2} ${y2}`}
+        strokeWidth="10"
+        strokeOpacity={0}
+        stroke="black"
+        className="cursor-pointer"
+      />
+    </>
+  );
 };
 
 export default Line;
