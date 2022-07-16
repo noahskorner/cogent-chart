@@ -29,7 +29,7 @@ const Line = ({
       <path
         d={`M${x1} ${y1} ${x2} ${y2}`}
         strokeWidth="1"
-        stroke="black"
+        stroke="rgb(203 213 225)"
         className="cursor-pointer"
       />
       <path

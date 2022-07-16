@@ -121,6 +121,15 @@ const Node = ({ id, initialX, initialY }: NodeProps) => {
             isFocused || isHovered ? "ring-1 ring-blue-300" : ""
           } w-full h-full border rounded-md bg-white border-slate-300 shadow cursor-move relative`}
         >
+          <input
+            type="text"
+            name=""
+            id=""
+            className="w-full p-1 border-b border-slate-300 rounded-t-md text-sm font-semibold"
+          />
+          <input type="text" name="" id="" className="w-full p-1  text-sm" />
+          <input type="text" name="" id="" className="w-full p-1  text-sm" />
+          <input type="text" name="" id="" className="w-full p-1  text-sm" />
           {isHovered || isFocused
             ? edges.map((edge, index) => {
                 return (

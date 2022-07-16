@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import useGraph from "../hooks/use-graph";
 import useLines from "../hooks/use-lines";
+import useNode from "../hooks/use-node";
 import useNodes from "../hooks/use-nodes";
 import useWindow from "../hooks/use-window";
 import Line from "./line";
@@ -19,7 +20,6 @@ const GraphContainer = ({ children }: GraphContainerProps) => {
   const { widthStyle: windowWidthStyle, heightStyle: windowHeightStyle } =
     useWindow();
   const { height, width, zoom } = useGraph();
-  const { nodes } = useNodes();
 
   return (
     <>
